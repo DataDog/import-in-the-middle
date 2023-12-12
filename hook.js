@@ -159,14 +159,17 @@ function createHook (meta) {
 import { register } from '${iitmURL}'
 import * as namespace from ${JSON.stringify(url)}
 const set = {}
-${exportNames.map((n) => `
-let $${n} = namespace.${n}
-export { $${n} as ${n} }
-set.${n} = (v) => {
-  $${n} = v
+${exportNames.map((n) => {
+  const variableName = `v${Buffer.from(n, 'utf-8').toString('hex')}`
+  return `
+let $${variableName} = namespace["${n}"]
+export { $${variableName} as "${n}" }
+set["${n}"] = (v) => {
+  $${variableName} = v
   return true
 }
-`).join('\n')}
+`
+}).join('\n')}
 register(${JSON.stringify(realUrl)}, namespace, set, ${JSON.stringify(specifiers.get(realUrl))})
 `
       } 
