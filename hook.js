@@ -310,6 +310,9 @@ const primary = namespaces.shift()
 for (const [k, v] of Object.entries(primary)) {
   _[k] = v
 }
+for (const k of Object.getOwnPropertySymbols(primary)) {
+  _[k] = primary[k]
+}
 for (const ns of namespaces) {
   for (const [k, v] of Object.entries(ns)) {
     if (k === 'default') continue
