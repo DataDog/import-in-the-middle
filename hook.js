@@ -228,7 +228,9 @@ function addIitm (url) {
   return needsToAddFileProtocol(urlObj) ? 'file:' + urlObj.href : urlObj.href
 }
 
-function createHook (meta) {
+// moduleList is an optional Set specifiying which modules need IITM patching
+// if moduleList is not set, IITM patches everything
+function createHook (meta, moduleList = new Set()) {
   async function resolve (specifier, context, parentResolve) {
     const { parentURL = '' } = context
     const newSpecifier = deleteIitm(specifier)
@@ -254,7 +256,6 @@ function createHook (meta) {
     }
 
     specifiers.set(url.url, specifier)
-
     return {
       url: addIitm(url.url),
       shortCircuit: true,
@@ -264,6 +265,7 @@ function createHook (meta) {
 
   const iitmURL = new URL('lib/register.js', meta.url).toString()
   async function getSource (url, context, parentGetSource) {
+    if (moduleList.size && !moduleList.has(url)) return parentGetSource(url, context, parentGetSource)
     if (hasIitm(url)) {
       const realUrl = deleteIitm(url)
       const { imports, namespaces, setters: mapSetters } = await processModule({
