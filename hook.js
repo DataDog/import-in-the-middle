@@ -226,6 +226,22 @@ async function processModule ({
       continue
     }
 
+    if (NODE_MAJOR >= 15) {
+      // const modName = `v${Buffer.from(n, 'utf-8').toString('hex')}`
+      const modName = normalizeModName(n)
+
+      setters.set(`$${modName}` + ns, `
+      let $${modName} = ${ns}["${n}"]
+      export { $${modName} as "${n}" }
+      set["${n}"] = (v) => {
+        $${modName} = v
+        return true
+      }
+      `)
+
+      continue
+    }
+
     setters.set(`$${n}` + ns, `
     let $${n} = ${ns}.${n}
     export { $${n} as ${n} }
