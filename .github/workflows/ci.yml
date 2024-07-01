@@ -25,6 +25,9 @@ jobs:
     strategy:
       matrix:
         node-version:
+          # We test against the earliest Node 12 version because that is what we
+          # support with our current engines config.
+          - 12.0.0
           - 12.x
           - 14.x
           - 16.10.0
