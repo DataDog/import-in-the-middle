@@ -57,6 +57,7 @@
     "acorn": "^8.8.2",
     "acorn-import-attributes": "^1.9.5",
     "cjs-module-lexer": "^1.2.2",
-    "module-details-from-path": "^1.0.3"
+    "module-details-from-path": "^1.0.3",
+    "@babel/helper-validator-identifier": "^7.24.7"
   }
 }
